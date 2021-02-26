@@ -8,7 +8,8 @@ using UnityEngine;
 public enum Team
 {
     Gryffindor,
-    Slytherin
+    Slytherin,
+    Empty
 }
 
 [AddComponentMenu("Characters/Traits")]
@@ -150,6 +151,9 @@ public class Player : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+
+
+
 
         Vector3 interstitial = new Vector3();
         Collider[] c = Physics.OverlapSphere(transform.position, ADJACENCY_RADIUS, LayerMask.GetMask("Player"));
