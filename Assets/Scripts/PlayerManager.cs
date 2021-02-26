@@ -17,7 +17,7 @@ public class PlayerManager : MonoBehaviour
     public int gryffScore;
     public int slythScore;
 
-    public int PlayersOnEachTeam = 10;
+    public int PlayersOnEachTeam = 10; // this is overridden by unity editor setting
 
     public int winningScore = 50;
     public int WorldSize { get; set; }
