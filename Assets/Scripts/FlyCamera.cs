@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.InputSystem;
 public class FlyCamera : MonoBehaviour
 {
     /*
@@ -16,6 +16,12 @@ public class FlyCamera : MonoBehaviour
     Space : Moves camera directly up per its local Y-axis
     */
 
+
+
+    /*
+     *Modified (By Dylan Leclair) to work with the InputSystem extension bindings cuz I broke the regular ones while trying to follow a tutorial, oops.
+     */
+
     public float mainSpeed = 10.0f;   // Regular speed
     public float shiftAdd = 25.0f;   // Amount to accelerate when shift is pressed
     public float maxShift = 100.0f;  // Maximum speed when holding shift
@@ -24,13 +30,22 @@ public class FlyCamera : MonoBehaviour
     private Vector3 lastMouse = new Vector3(255, 255, 255);  // kind of in the middle of the screen, rather than at the top (play)
     private float totalRun = 1.0f;
 
+    private Vector2 WASD;
+
+    void OnMove(InputValue iv)
+    {
+        WASD = iv.Get<Vector2>();
+    }
+
     void Update()
     {
-        lastMouse = Input.mousePosition - lastMouse;
+        Vector3 oops = new Vector3(Mouse.current.position.x.ReadValue(),Mouse.current.position.y.ReadValue(), 0.0f);
+
+        lastMouse = oops - lastMouse;
         lastMouse = new Vector3(-lastMouse.y * camSens, lastMouse.x * camSens, 0);
         lastMouse = new Vector3(transform.eulerAngles.x + lastMouse.x, transform.eulerAngles.y + lastMouse.y, 0);
         transform.eulerAngles = lastMouse;
-        lastMouse = Input.mousePosition;
+        lastMouse = oops;
         // Mouse camera angle done.  
 
         // Keyboard commands
@@ -58,29 +73,8 @@ public class FlyCamera : MonoBehaviour
     {
         Vector3 p_Velocity = new Vector3();
 
-        // Forwards
-        if (Input.GetKey(KeyCode.W))
-            p_Velocity += new Vector3(0, 0, 1);
+        p_Velocity += 10 * new Vector3(WASD.x,0.0f, WASD.y);
 
-        // Backwards
-        if (Input.GetKey(KeyCode.S))
-            p_Velocity += new Vector3(0, 0, -1);
-
-        // Left
-        if (Input.GetKey(KeyCode.A))
-            p_Velocity += new Vector3(-1, 0, 0);
-
-        // Right
-        if (Input.GetKey(KeyCode.D))
-            p_Velocity += new Vector3(1, 0, 0);
-
-        // Up
-        if (Input.GetKey(KeyCode.Space))
-            p_Velocity += new Vector3(0, 1, 0);
-
-        // Down
-        if (Input.GetKey(KeyCode.LeftControl))
-            p_Velocity += new Vector3(0, -1, 0);
 
         return p_Velocity;
     }
