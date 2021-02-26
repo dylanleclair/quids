@@ -107,7 +107,8 @@ public class PlayerManager : MonoBehaviour
         }
         else UILabel.text = $"Gryffindor: {gryffScore} - Slytherin: {slythScore}";
 
-
+        /// Disable for gif captures
+        //UILabel.text = "";
 
         if (snitch.caught)
         {

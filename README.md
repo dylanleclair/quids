@@ -52,6 +52,6 @@ After becoming exhausted a number of times, a player may be rendered unconscious
 
 #### A preview of some behaviours:
 
-| A player respawning after unconscious | A couple of exhausted players |
+| Players respawning after unconscious | A couple of exhausted players |
 | ---------------- | ---------------- |
 | ![a quid falling unconscious and respawning](https://media.giphy.com/media/VIDgtd0BNHrYVPe1OI/giphy.gif) | ![an exhausted quid](https://media.giphy.com/media/WdQL8Fi38zMa1Nu9zR/giphy.gif) |
