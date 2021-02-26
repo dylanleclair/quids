@@ -10,13 +10,24 @@ public class Snitch : MonoBehaviour
     public float theta = 90;
     public float mass = 75;
     public float r = 20; 
-    public float maxvelocity = 27;
     public float velocity = 20;
     public float force = 115f;
     private LineRenderer LR;
+    public SphereCollider sc;
+
+    public bool pointForGryff = false;
+    public bool pointForSlyth = false;
+    public bool caught = false;
+
+    float bufferedR;
+    float bufferedTheta;
+
     // Start is called before the first frame update
-    void Start()
+
+    public void Awake()
     {
+        sc = GetComponent<SphereCollider>();
+
         LR = gameObject.AddComponent<LineRenderer>();
         LR.positionCount = 2;
         LR.startWidth = 0.5f;
@@ -26,6 +37,12 @@ public class Snitch : MonoBehaviour
 
         target = GenerateTarget();
         dir = Vector3.up;
+    }
+
+    void Start()
+    {
+
+        velocity = 15;
     }
 
     // Update is called once per frame
@@ -41,6 +58,10 @@ public class Snitch : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+
+        Debug.Log("Trigger" + sc.isTrigger);
+
+
         Debug.Log(Vector3.Distance(transform.position, target));
         if (! (Vector3.Distance(transform.position, target) < 8f))
         {
@@ -63,7 +84,7 @@ public class Snitch : MonoBehaviour
         velocity += accel * Time.deltaTime;
 
         // Clamp velocity so that the player does not move too fast
-        velocity = Mathf.Clamp(velocity, 0, 25);
+        velocity = Mathf.Clamp(velocity, 0, 17);
 
         transform.position = transform.position + (dir * velocity) * Time.deltaTime;
 
@@ -73,13 +94,38 @@ public class Snitch : MonoBehaviour
     }
 
 
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerLayer")) caught = true;
+        if (collision.gameObject.tag == "Slytherin")
+        {
+            //
+            pointForSlyth = true;
+        } else if (collision.gameObject.tag == "Gryffindor")
+        {
+            pointForGryff = true;
+        }
+        
+    }
 
     public Vector3 GenerateTarget()
     {
-        float tr = Random.Range(-37, 37);
-        float theta = Random.Range(0, 7);
 
-        Vector3 t = new Vector3(tr * Mathf.Cos(theta), tr * Mathf.Sin(theta), tr);
+
+        float tr = bufferedR + Random.Range(-100, 101) / 10;
+        Debug.Log("tr: " + tr);
+        float theta = bufferedTheta + 0.6f * (Random.value );
+
+
+        tr = Mathf.Clamp(tr, -40,40);
+        
+
+        Vector3 t = new Vector3(tr * Mathf.Cos(theta), tr,tr * Mathf.Sin(theta));
+
+        bufferedR = tr;
+        bufferedTheta = theta;
+        
         //Debug.Log("Target: " + t);
         return t;
     }
