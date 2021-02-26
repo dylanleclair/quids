@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MathNet.Numerics;
 
 
 public enum Team
@@ -90,9 +89,6 @@ public class Player : MonoBehaviour
 
     private LineRenderer LR;
 
-    private List<GameObject> others;
-    private List<Vector3> adjacencyForces;
-
     private Rigidbody rb;
     private GameObject snitch;
     /// <summary>
@@ -129,8 +125,8 @@ public class Player : MonoBehaviour
         LR.material = GetComponent<Renderer>().material;
         LR.startWidth = 0.3f;
         LR.endWidth = 0.3f;
-        
 
+        snitch = GameObject.FindGameObjectWithTag("Snitch");
 
         rb = GetComponent<Rigidbody>();
 
@@ -138,17 +134,6 @@ public class Player : MonoBehaviour
         rb.useGravity = false;
 
 
-        
-
-        foreach (var s in GameObject.FindGameObjectsWithTag("Slytherin"))
-        {
-            if (s.name != name)
-                others.Add(s);
-        }
-        foreach (var g in GameObject.FindGameObjectsWithTag("Gryffindor")) {
-            if (g.name != name)
-                others.Add(g);
-        }
 
     }
 
@@ -156,15 +141,6 @@ public class Player : MonoBehaviour
     void Update()
     {
 
-        foreach (var item in others)
-        {
-            Vector3 diff = item.transform.position - transform.position;\
-            if (diff.magnitude >= ADJACENCY_RADIUS)
-            {
-                adjacencyForces.Add(diff);
-            }
-            
-        }
 
     }
 
@@ -174,14 +150,20 @@ public class Player : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        // calculate the direction of the snitch
 
-        snitch = GameObject.FindGameObjectWithTag("Snitch");
-        Vector3 snitchDir = (snitch.transform.position - transform.position).normalized;
+        Vector3 interstitial = new Vector3();
+        Collider[] c = Physics.OverlapSphere(transform.position, ADJACENCY_RADIUS, LayerMask.GetMask("Player"));
+
+        foreach (var col in c)
+        {
+            interstitial += (transform.position - col.transform.position) * 0.3f;
+        }
 
         // find vectors towards other players, invert them
+        Vector3 snitchDir = (snitch.transform.position - transform.position).normalized;
 
-        dir = snitchDir;
+
+        dir = snitchDir += interstitial;
 
         // F = ma
         // F / m = a
@@ -196,7 +178,7 @@ public class Player : MonoBehaviour
 
         // Draw the directional arrows
         LR.SetPosition(0, transform.position);
-        LR.SetPosition(1, dir * 1.5f + transform.position);
+        LR.SetPosition(1, dir.normalized * 1.5f + transform.position);
 
     }
 
