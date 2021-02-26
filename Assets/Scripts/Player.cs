@@ -1,5 +1,5 @@
 ﻿
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,18 +41,18 @@ public class Traits
     }
 
 
-    public double GenerateGaussianValue(int mean, int stddeviation)
+    public float GenerateGaussianValue(int mean, int stddeviation)
     {
         // Generate the values according to the box-muller transform
 
         // generate a random value between 0 and 1
-        double val = UnityEngine.Random.Range(0, 100);
-        double val2 = UnityEngine.Random.Range(0, 100);
-        double u1 = val / 100.00;
-        double u2 = val2 / 100.00;
+        float val = UnityEngine.Random.Range(0, 100);
+        float val2 = UnityEngine.Random.Range(0, 100);
+        float u1 = val / 100.00f;
+        float u2 = val2 / 100.00f;
 
         // pass through the box-muller transform
-        double z0 = Math.Sqrt(-2 * Math.Log(u1)) * Math.Cos(2 * (float)Math.PI * u2);
+        float z0 = Mathf.Sqrt(-2 * Mathf.Log(u1)) * Mathf.Cos(2 * Mathf.PI * u2);
 
         // discard the second number lol
         //double z1 = Math.Sqrt(-2 * Math.Log(u1)) * Math.Sin(2 * (float)Math.PI * u2);
@@ -90,13 +90,22 @@ public class Player : MonoBehaviour
     public float exhaustTimer = 0.0f;
     public float EXHAUST_PAUSE_DURATION = 1.0f;
 
+
+    public bool hitGround;
+    public float unconsciousTimer = 0;
+    public float unconsciousTimeOut = 3.0f;
+
+    public bool unconscious = false;
+
+    // FOR THE FUTURE: use statemachine / enum instead of bools for unconscious/exhaustion
+
     private Vector3 dir;
     public float force = 115f; // each broomstick will propel a player with the same force - accel is calculated by F/m = a (by physics laws)
     private float velocity = 0;
 
+    private Vector3 respawn;
 
-   
-
+    private System.Random random;
     private LineRenderer LR;
 
     private Rigidbody rb;
@@ -129,6 +138,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        random = new System.Random();
         // Update the generated values to be reflected by their rigidbody
         LR = GetComponent<LineRenderer>();
         LR.positionCount = 2;
@@ -143,7 +154,16 @@ public class Player : MonoBehaviour
         rb.mass = T.Weight;
         rb.useGravity = false;
 
+        if (House == Team.Gryffindor)
+        {
+            respawn = GameObject.FindGameObjectWithTag("GRespawn").transform.position;
+            Debug.Log(respawn);
+        } else
+        {
+            respawn = GameObject.FindGameObjectWithTag("SRespawn").transform.position;
+        }
 
+        
 
     }
 
@@ -151,6 +171,67 @@ public class Player : MonoBehaviour
     void Update()
     {
 
+
+    }
+
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerLayer"))
+        {
+            GameObject g = collision.gameObject;
+            Player p = g.GetComponent<Player>(); 
+
+
+            Debug.Log(p == this);
+
+            double pval1 = p.T.Aggressiveness * (random.NextDouble() * (1.2 - 0.8) +0.8) * (1 - (p.exhaustion / p.T.MaxExhaustion));
+            
+            // this players 
+            double pval2 = T.Aggressiveness * (random.NextDouble() * (1.2 - 0.8) +0.8) * (1 - (exhaustion / T.MaxExhaustion));
+
+            // lower value becomes unconscious
+
+            // Same team collision
+            if (p.House == House)
+            {
+                if (random.Next(0,100) < 5)
+                {
+                    if (pval2 < pval1)
+                    {
+                        // this player becomes unconscious
+                        unconscious = true;
+                    }
+                    else if (pval2 > pval1)
+                    {
+                        // other player unconscious
+                        p.unconscious = true;
+                    }
+                }
+
+            } else // enemy player collision
+            {
+                if (pval2 < pval1)
+                {
+                    // this player becomes unconscious
+                    unconscious = true;
+                }
+                else if (pval2 > pval1)
+                {
+                    // other player unconscious
+                    p.unconscious = true;
+                }
+            }
+            
+
+        }
+
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("WallLayer"))
+        {
+            hitGround = true;
+            transform.position = respawn;
+        }
 
     }
 
@@ -185,7 +266,7 @@ public class Player : MonoBehaviour
             exhausted = true;
         }
 
-        if (!exhausted)
+        if (!exhausted && !unconscious)
         {
             // F = ma
             // F / m = a
@@ -198,7 +279,7 @@ public class Player : MonoBehaviour
 
             transform.position = transform.position + (dir * (speed * velocity)) * Time.deltaTime;
             exhaustion += (velocity / 40);
-        } else
+        } else if (exhausted)
         {
             if (exhaustTimer < EXHAUST_PAUSE_DURATION)
             {
@@ -210,6 +291,31 @@ public class Player : MonoBehaviour
                 exhaustion = 0.0f;
                 exhausted = false;
             }
+        } else if (unconscious)
+        {
+            // make it fall
+
+            rb.useGravity = true;
+
+            if (hitGround)
+            {
+                rb.useGravity = false;
+                // timer 
+                unconsciousTimer += Time.deltaTime;
+                if (unconsciousTimer >= unconsciousTimeOut)
+                {
+                    unconscious = false;
+                    unconsciousTimer = 0;
+                    hitGround = false;
+                    exhaustion = 0;
+                    velocity = 2;
+                    
+                }
+
+            }
+
+            // when collides with ground, move to team start
+            // put on hold for some time out
         }
 
 
