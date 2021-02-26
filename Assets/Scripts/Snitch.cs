@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class Snitch : MonoBehaviour
 {
-
+    public LinkedList<Vector3> dirQueue;
+    private Vector3 target;
+    public Vector3 dir;
+    public float theta = 90;
+    public float mass = 75;
+    public float r = 20; 
+    public float maxvelocity = 27;
+    public float velocity = 20;
+    public float force = 115f;
     private Rigidbody rb;
     private float movementX;
     private float movementY;
@@ -22,6 +30,8 @@ public class Snitch : MonoBehaviour
         LR.startColor = Color.yellow;
         LR.endColor = Color.yellow;
 
+        target = GenerateTarget();
+        dir = Vector3.up;
     }
 
     // Update is called once per frame
@@ -37,40 +47,59 @@ public class Snitch : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-
-
-        timer += Time.deltaTime;
-
-        if (timer >= 2.0f || init)
+        Debug.Log(Vector3.Distance(transform.position, target));
+        if (! (Vector3.Distance(transform.position, target) < 8f))
         {
-            if (init)
-            {
-                init = false;
-            }
-            float x = (UnityEngine.Random.value - 0.5f);
-            float y = (UnityEngine.Random.value - 0.5f);
-            float z = (UnityEngine.Random.value - 0.5f);
+            // move closer to it
+            dir = (target - transform.position).normalized;
 
-            Vector3 randomForce = new Vector3(x, y, z);
+            // potentially add some variance
+
+        } else
+        {
+            // set a new target
+
+            target = GenerateTarget();
 
 
-            Vector3 toCenter = 0.5f * (new Vector3(0.0f, 25.0f, 0.0f) - transform.position).normalized + 0.5f * (randomForce).normalized;
-
-            Debug.Log(toCenter);
-
-            rb.AddForce(600 * toCenter);
-
-            /// TODO 
-            // calculate some small offset of the previous direction instead of having it be truly random
-
-            timer = 0.0f;
         }
+        
 
+        float accel = force / mass;
+        velocity += accel * Time.deltaTime;
 
+        // Clamp velocity so that the player does not move too fast
+        velocity = Mathf.Clamp(velocity, 0, 25);
+
+        transform.position = transform.position + (dir * velocity) * Time.deltaTime;
 
         LR.SetPosition(0, transform.position);
-        LR.SetPosition(1, transform.forward * rb.velocity.magnitude + transform.position); 
+        LR.SetPosition(1, dir * 4 + transform.position); 
         
     }
+
+
+
+    public Vector3 GenerateTarget()
+    {
+        float tr = Random.Range(-37, 37);
+        float theta = Random.Range(0, 7);
+
+        Vector3 t = new Vector3(tr * Mathf.Cos(theta), tr * Mathf.Sin(theta), tr);
+        //Debug.Log("Target: " + t);
+        return t;
+    }
+
+    public float AngleBetweenVectors(Vector3 a, Vector3 b)
+    {
+        a = a.normalized;
+        b = b.normalized;
+        float num = Vector3.Dot(a, b);
+        float denom = a.magnitude * b.magnitude;
+
+        return Mathf.Acos(num / denom);
+    }
+
+
 
 }
