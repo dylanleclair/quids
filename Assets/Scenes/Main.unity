@@ -1097,7 +1097,7 @@ MonoBehaviour:
   lastTeamToScore: 0
   gryffScore: 0
   slythScore: 0
-  PlayersOnEachTeam: 10
+  PlayersOnEachTeam: 5
   winningScore: 50
 --- !u!4 &856430717
 Transform:

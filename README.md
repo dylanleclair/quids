@@ -2,6 +2,8 @@
 
 ![intro](https://media.giphy.com/media/E807dDxYuoZ6QCxg3C/giphy.gif)
 
+Link to github repo: https://github.com/dylanleclair/quids
+
 Quidditch is a game in the world of Harry Potter, where different Hogwarts houses duke it out, chasing a golden snitch to earn points. This is an implementation of such a game in Unity, with a number of behaviours being used to model what an actual game might look like. 
 
 In this version, there are only the Gryffindor and Slytherin houses. The red and green spheres transparent spheres you see in the previews are the bases for each team.  
@@ -52,6 +54,6 @@ After becoming exhausted a number of times, a player may be rendered unconscious
 
 #### A preview of some behaviours:
 
-| A player respawning after unconscious | A couple of exhausted players |
+| Players respawning after unconscious | A couple of exhausted players |
 | ---------------- | ---------------- |
 | ![a quid falling unconscious and respawning](https://media.giphy.com/media/VIDgtd0BNHrYVPe1OI/giphy.gif) | ![an exhausted quid](https://media.giphy.com/media/WdQL8Fi38zMa1Nu9zR/giphy.gif) |
