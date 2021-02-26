@@ -39,12 +39,6 @@ Calculating the direction to the snitch was simple enough - it was just the vect
 
 I used a SphereCast to check for players in a radius of each player, adding a small force for each of these. These go in the direction of nearby players to the player in focus, since it made the most sense to me that way and had rather good success when I was testing it out. 
 
-#### In addition to these, there is also a set of behaviours as follow:
-
-| Respawn after unconscious | Exhausted player |
-| ---------------- | ---------------- |
-| ![a quid falling unconscious and respawning](https://media.giphy.com/media/VIDgtd0BNHrYVPe1OI/giphy.gif) | ![an exhausted quid](https://media.giphy.com/media/WdQL8Fi38zMa1Nu9zR/giphy.gif) |
-
 
 ### Collisions with other players
 
@@ -56,3 +50,8 @@ Every player also has a value for exhaustion. Players become exhausted according
 
 After becoming exhausted a number of times, a player may be rendered unconscious, causing them to go through the unconscious behaviour as described above.
 
+#### A preview of some behaviours:
+
+| A player respawning after unconscious | A couple of exhausted players |
+| ---------------- | ---------------- |
+| ![a quid falling unconscious and respawning](https://media.giphy.com/media/VIDgtd0BNHrYVPe1OI/giphy.gif) | ![an exhausted quid](https://media.giphy.com/media/WdQL8Fi38zMa1Nu9zR/giphy.gif) |
