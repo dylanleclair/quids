@@ -1,13 +1,12 @@
-# Quidditch
+# quids
 
 ![intro](https://media.giphy.com/media/E807dDxYuoZ6QCxg3C/giphy.gif)
 
- an implementation of quidditch for cpsc 565
+Quidditch is a game in the world of Harry Potter, where different Hogwarts houses duke it out, chasing a golden snitch to earn points. This is an implementation of such a game in Unity, with a number of behaviours being used to model what an actual game might look like. 
 
+In this version, there are only the Gryffindor and Slytherin houses. The red and green spheres transparent spheres you see in the previews are the bases for each team.  
 
-quidditch is a game in the world of Harry Potter, where different Hogwarts houses duke it out, chasing a golden snitch to earn points.
-
-
+Players and the snitch all have a directional line sticking out of them, indicating where they are headed. 
 
 ## Snitch Behaviour
 
@@ -39,4 +38,14 @@ Every player has a set of forces:
 Calculating the direction to the snitch was simple enough - it was just the vector from the position of the player to the snitch's position. 
 
 I used a SphereCast to check for players in a radius of each player, adding a small force for each of these. These go in the direction of nearby players to the player in focus, since it made the most sense to me that way and had rather good success when I was testing it out. 
+
+### Collisions with other players
+
+Upon colliding with another player, a player may be rendered unconscious - causing them to fall to the ground. When this happens, they are teleported to their team's base where they wait a few seconds before getting back into play. 
+
+### Exhaustion
+
+Every player also has a value for exhaustion. Players become exhausted according to their velocity. Exhausted players will briefly pause to regain energy, before chasing the snitch once more. 
+
+After becoming exhausted a number of times, a player may be rendered unconscious, causing them to go through the unconscious behaviour as described above.
 
