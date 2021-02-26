@@ -14,6 +14,11 @@ public class Snitch : MonoBehaviour
     public float velocity = 20;
     public float force = 115f;
     private LineRenderer LR;
+
+
+    float bufferedR;
+    float bufferedTheta;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,10 +81,21 @@ public class Snitch : MonoBehaviour
 
     public Vector3 GenerateTarget()
     {
-        float tr = Random.Range(-37, 37);
-        float theta = Random.Range(0, 7);
 
-        Vector3 t = new Vector3(tr * Mathf.Cos(theta), tr * Mathf.Sin(theta), tr);
+
+        float tr = bufferedR + Random.Range(-100, 101) / 10;
+        Debug.Log("tr: " + tr);
+        float theta = bufferedTheta + 0.6f * (Random.value );
+
+
+        tr = Mathf.Clamp(tr, -40,40);
+        
+
+        Vector3 t = new Vector3(tr * Mathf.Cos(theta), tr,tr * Mathf.Sin(theta));
+
+        bufferedR = tr;
+        bufferedTheta = theta;
+        
         //Debug.Log("Target: " + t);
         return t;
     }
