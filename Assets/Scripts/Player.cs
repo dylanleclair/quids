@@ -79,14 +79,23 @@ public class Player : MonoBehaviour
     /// I decided to go old school and implement my own. 
     /// </summary>
 
+    public float speed = 3.0f;
 
     public float ADJACENCY_RADIUS = 8;
 
     public float gravity;
+    
+    public bool exhausted = false;
+    public float exhaustion = 0.0f;
+    public float exhaustTimer = 0.0f;
+    public float EXHAUST_PAUSE_DURATION = 1.0f;
 
     private Vector3 dir;
     public float force = 115f; // each broomstick will propel a player with the same force - accel is calculated by F/m = a (by physics laws)
     private float velocity = 0;
+
+
+   
 
     private LineRenderer LR;
 
@@ -169,16 +178,43 @@ public class Player : MonoBehaviour
 
         dir = snitchDir += interstitial;
 
-        // F = ma
-        // F / m = a
-        // I am not going to convert between weight and mass ;-;
-        float accel = force / T.Weight;
-        velocity += accel * Time.deltaTime;
 
-        // Clamp velocity so that the player does not move too fast
-        velocity = Mathf.Clamp(velocity, 0, T.MaxVelocity);
 
-        transform.position = transform.position + (dir * velocity) * Time.deltaTime;
+        if (exhaustion > T.MaxExhaustion)
+        {
+            exhausted = true;
+        }
+
+        if (!exhausted)
+        {
+            // F = ma
+            // F / m = a
+            // I am not going to convert between weight and mass ;-;
+            float accel = force / T.Weight;
+            velocity += accel * Time.deltaTime;
+
+            // Clamp velocity so that the player does not move too fast
+            velocity = Mathf.Clamp(velocity, 0, T.MaxVelocity);
+
+            transform.position = transform.position + (dir * (speed * velocity)) * Time.deltaTime;
+            exhaustion += (velocity / 40);
+        } else
+        {
+            if (exhaustTimer < EXHAUST_PAUSE_DURATION)
+            {
+                exhaustTimer += Time.deltaTime;
+            } else
+            {
+                velocity = 0.0f;
+                exhaustTimer = 0.0f;
+                exhaustion = 0.0f;
+                exhausted = false;
+            }
+        }
+
+
+
+        
 
         // Draw the directional arrows
         LR.SetPosition(0, transform.position);

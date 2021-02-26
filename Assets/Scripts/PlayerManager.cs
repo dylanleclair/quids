@@ -10,6 +10,8 @@ public class PlayerManager : MonoBehaviour
 
     public Snitch snitch;
 
+    public Text UILabel;
+
     public Team lastTeamToScore = Team.Empty;
 
     public int gryffScore;
@@ -17,6 +19,7 @@ public class PlayerManager : MonoBehaviour
 
     public int PlayersOnEachTeam = 10;
 
+    public int winningScore = 50;
     public int WorldSize { get; set; }
 
 
@@ -84,6 +87,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         snitch = GameObject.FindGameObjectWithTag("Snitch").GetComponent<Snitch>();
+        UILabel = GetComponentInChildren<Text>();
     }
 
     // Update is called once per frame
@@ -91,7 +95,19 @@ public class PlayerManager : MonoBehaviour
     {
         // Update the UI
 
-        GetComponentInChildren<Text>().text = $"Gryffindor: {gryffScore} - Slytherin: {slythScore}";
+         
+
+        if (slythScore >= winningScore)
+        {
+            UILabel.text = $"Slytherin wins with {slythScore} points!";
+        }
+        else if (gryffScore >= winningScore)
+        {
+            UILabel.text = $"Gryffindor wins with {gryffScore} points!";
+        }
+        else UILabel.text = $"Gryffindor: {gryffScore} - Slytherin: {slythScore}";
+
+
 
         if (snitch.caught)
         {
