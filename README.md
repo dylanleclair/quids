@@ -7,7 +7,7 @@
 
 quidditch is a game in the world of Harry Potter, where different Hogwarts houses duke it out, chasing a golden snitch to earn points.
 
-<div align="center">
+
 
 ## Snitch Behaviour
 
@@ -40,4 +40,3 @@ Calculating the direction to the snitch was simple enough - it was just the vect
 
 I used a SphereCast to check for players in a radius of each player, adding a small force for each of these. These go in the direction of nearby players to the player in focus, since it made the most sense to me that way and had rather good success when I was testing it out. 
 
-</div>
