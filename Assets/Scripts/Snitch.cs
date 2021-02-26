@@ -13,16 +13,10 @@ public class Snitch : MonoBehaviour
     public float maxvelocity = 27;
     public float velocity = 20;
     public float force = 115f;
-    private Rigidbody rb;
-    private float movementX;
-    private float movementY;
     private LineRenderer LR;
-    private bool init = true;
-    private float timer = 0.0f;
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         LR = gameObject.AddComponent<LineRenderer>();
         LR.positionCount = 2;
         LR.startWidth = 0.5f;
