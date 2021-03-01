@@ -46,14 +46,42 @@ I used a SphereCast to check for players in a radius of each player, adding a sm
 
 Upon colliding with another player, a player may be rendered unconscious - causing them to fall to the ground. When this happens, they are teleported to their team's base where they wait a few seconds before getting back into play. 
 
+Players on the same team have a 5% chance of falling unconscious.
+
+A value calculated based on each players aggression is chosen to select the player who falls unconscious. 
+
 ### Exhaustion
 
 Every player also has a value for exhaustion. Players become exhausted according to their velocity. Exhausted players will briefly pause to regain energy, before chasing the snitch once more. 
 
 After becoming exhausted a number of times, a player may be rendered unconscious, causing them to go through the unconscious behaviour as described above.
 
+### Gryffindor specific bonuses
+
+- Gryffindor players gain max velocity increase when in groups
+- Gryffindor 
+
+### Slytherin specific bonuses
+- Slytherin players become more aggressive in groups
+- Gryffindor players in the drafts of Slytherin players are slowed
+
+Slytherin players become more aggressive when grouped together (see collisions with other players)
+
+
+
 #### A preview of some behaviours:
 
 | Players respawning after unconscious | A couple of exhausted players |
 | ---------------- | ---------------- |
 | ![a quid falling unconscious and respawning](https://media.giphy.com/media/VIDgtd0BNHrYVPe1OI/giphy.gif) | ![an exhausted quid](https://media.giphy.com/media/WdQL8Fi38zMa1Nu9zR/giphy.gif) |
+
+
+# Downloading and running quids
+
+To run this project, clone the github repo and launch it in Unity. 
+
+The version used to develop this is `Unity 2019.2.5f`. The only dependency this uses is the Unity Input System package, which should come with the installation.
+
+In the Unity editor, you should run the Main.unity scene, as this is the only scene in the project. It features a basic playing environment seen in the gifs above! 
+
+
