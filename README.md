@@ -59,14 +59,11 @@ After becoming exhausted a number of times, a player may be rendered unconscious
 ### Gryffindor specific bonuses
 
 - Gryffindor players gain max velocity increase when in groups
-- Gryffindor 
+- Gryffindor players in small proximity to both the snitch and slytherin players receive a speed boost 
 
 ### Slytherin specific bonuses
-- Slytherin players become more aggressive in groups
+- Slytherin players become more aggressive in groups (see collisions with other players)
 - Gryffindor players in the drafts of Slytherin players are slowed
-
-Slytherin players become more aggressive when grouped together (see collisions with other players)
-
 
 
 #### A preview of some behaviours:
@@ -82,6 +79,9 @@ To run this project, clone the github repo and launch it in Unity.
 
 The version used to develop this is `Unity 2019.2.5f`. The only dependency this uses is the Unity Input System package, which should come with the installation.
 
-In the Unity editor, you should run the Main.unity scene, as this is the only scene in the project. It features a basic playing environment seen in the gifs above! 
+In the Unity editor, you should run the `Main.unity` scene, as this is the only scene in the project. It features a basic playing environment seen in the gifs above! 
 
 
+## Reviewing code
+
+This code uses camelCase. Comments in triple brackets are detailed summaries, while double brackets are less formal descriptions of specific lines. 
